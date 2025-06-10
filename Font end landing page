@@ -1,0 +1,60 @@
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/README.md b/README.md
+index 39f4831673ba87ff3978612d494be8379dc92ef8..87a608025eadfaf80b323149ecc1b9ad8f38bb0d 100644
+--- a/README.md
++++ b/README.md
+@@ -1 +1,50 @@
+-# Demo-Franchise-U
++# Demo FranchiseU Podcast Landing Page
++
++This is a minimal Next.js project containing a sample landing page for the FranchiseU! podcast.
++
++## Development
++
++```bash
++npm install
++npm run dev
++```
++
++### API Server
++
++To start the Express API for managing episodes:
++
++```bash
++npm run api
++```
++
++The server expects PostgreSQL and AWS credentials via environment variables:
++
++- `DATABASE_URL` – PostgreSQL connection string
++- `S3_BUCKET` and `S3_REGION` – target S3 bucket and region
++- `OPENAI_API_KEY` – API key for generating summaries
++
++### API Endpoints
++
++- `GET /api/episodes` – list all episodes
++- `POST /api/episodes` – upload a new episode
++- `PUT /api/episodes/:id` – edit an episode
++- `DELETE /api/episodes/:id` – delete an episode
++- `POST /api/episodes/:id/like` – toggle like for the given user and return the like count
++- `POST /api/episodes/:id/bookmark` – toggle bookmark for the given user and return bookmark status
++
++For like and bookmark requests, pass the user email in the request body (`user`) or as an `X-User` header. Anonymous users may send their local identifier instead.
++
++### Transcript Summaries
++
++Use the `summarizeEpisode` function in `openai-summary.js` to generate a 3-sentence summary and relevant tags for an episode transcript. The function requires `OPENAI_API_KEY` to be set and returns JSON:
++
++```js
++const { summarizeEpisode } = require('./openai-summary');
++
++(async () => {
++  const result = await summarizeEpisode('full transcript text');
++  console.log(result.summary);
++  console.log(result.tags);
++})();
++```
++
+ 
+EOF
+)
